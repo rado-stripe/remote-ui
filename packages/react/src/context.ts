@@ -3,7 +3,11 @@ import type {RemoteRoot} from '@remote-ui/core';
 
 import type reconciler from './reconciler';
 
-export const RenderContext = createContext<{
+export interface RenderContextDescriptor {
   root: RemoteRoot;
   reconciler: typeof reconciler;
-} | null>(null);
+}
+
+export const RenderContext = createContext<RenderContextDescriptor | null>(
+  null,
+);
