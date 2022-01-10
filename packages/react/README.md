@@ -51,24 +51,36 @@ As you add, remove, and update host components in your React tree, this renderer
 Updating the the root React element for a given remote root can be done by calling the `render()` function again. For example, the root React element can be updated in an effect to receive updated props when they change:
 
 ```tsx
-interface Props {
-  count: number;
-  onClick(): void;
-}
+import {useEffect, useMemo} from 'react';
+import {render, createRemoteRoot} from '@remote-ui/react';
 
-function App({count, onClick}: Props) {
-  return <Button onClick={onClick}>I was clicked {count} time(s)</Button>;
+// A remote component
+const Button = createRemoteReactComponent<'Button', {onPress(): void}>(
+  'Button',
+);
+
+function App({count, onPress}: {count: number; onPress(): void}) {
+  return <Button onPress={onPress}>I was clicked {count} time(s)</Button>;
 }
 
 function MyRemoteRenderer() {
+  const remoteRoot = useMemo(() => {
+    // Assuming we get a function that will communicate with the host...
+    const channel = () => {};
+
+    return createRemoteRoot(channel, {
+      components: [Button],
+    });
+  }, []);
   const [count, setCount] = useState(0);
 
   useEffect(() => {
+    // We update the root component by calling `render` whenever `count` changes
     render(
-      <App count={count} onClick={() => setCount((count) => count + 1)} />,
+      <App count={count} onPress={() => setCount((count) => count + 1)} />,
       remoteRoot,
     );
-  }, [count]);
+  }, [count, remoteRoot]);
 }
 ```
 

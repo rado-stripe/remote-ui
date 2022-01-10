@@ -1,11 +1,11 @@
 import {createContext} from 'react';
 import type {RemoteRoot} from '@remote-ui/core';
 
-import type reconciler from './reconciler';
+import type {Reconciler} from './reconciler';
 
 export interface RenderContextDescriptor {
   root: RemoteRoot;
-  reconciler: typeof reconciler;
+  reconciler: Reconciler;
 }
 
 export const RenderContext = createContext<RenderContextDescriptor | null>(

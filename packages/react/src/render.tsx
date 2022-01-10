@@ -2,13 +2,13 @@ import type {ReactElement} from 'react';
 import type {RemoteRoot} from '@remote-ui/core';
 import type {RootTag} from 'react-reconciler';
 
-import reconciler from './reconciler';
+import {reconciler, Reconciler} from './reconciler';
 import {RenderContext, RenderContextDescriptor} from './context';
 
 const cache = new WeakMap<
   RemoteRoot,
   {
-    container: typeof reconciler;
+    container: ReturnType<Reconciler['createContainer']>;
     renderContext: RenderContextDescriptor;
   }
 >();
@@ -26,14 +26,14 @@ export function render(
   let cached = cache.get(root);
 
   if (!cached) {
-    // Since we haven't created a container for this root yet, create a new one and cache it for retrieval on subsequent calls
+    // Since we haven't created a container for this root yet, create a new one
     const value = {
       container: reconciler.createContainer(root, LEGACY_ROOT, false, null),
       // We also cache the render context to avoid re-creating it on subsequent render calls
       renderContext: {root, reconciler},
     };
 
-    // Store the container and render context for retrieval on subsequent render calls so it can be updated
+    // Store the container and render context for retrieval on subsequent render calls
     cache.set(root, value);
     cached = value;
   }
