@@ -1,8 +1,8 @@
-import {DomReceiver} from 'https://cdn.skypack.dev/@remote-ui/dom';
+import {DomReceiver} from '@remote-ui/dom';
 import {
   createEndpoint,
   fromIframe,
-} from 'https://cdn.skypack.dev/@remote-ui/rpc';
+} from '@remote-ui/rpc';
 
 import {UiButton, UiTextField} from './components.js';
 
@@ -43,6 +43,6 @@ receiver.bind(uiRoot);
 // provides a `render()` function that will be called in response to this
 // method, with the `Endpoint` taking care of serializing arguments over
 // `postMessage()` to the remote context.
-await remoteEndpoint.call.render(receiver.receive, {
+remoteEndpoint.call.render(receiver.receive, {
   getMessage: () => textField.value,
 });

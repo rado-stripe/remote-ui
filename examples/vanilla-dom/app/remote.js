@@ -2,8 +2,8 @@ import {
   retain,
   createEndpoint,
   fromInsideIframe,
-} from 'https://cdn.skypack.dev/@remote-ui/rpc';
-import {createRemoteRoot} from 'https://cdn.skypack.dev/@remote-ui/core';
+} from '@remote-ui/rpc';
+import {createRemoteRoot} from '@remote-ui/core';
 
 // This creates the “remote” endpoint — the one that executes inside
 // a hidden iframe, and has no access to the DOM of the main page.

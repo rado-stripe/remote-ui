@@ -2,7 +2,7 @@
 // framework for creating web components. To learn more about Lit,
 // you can visit https://lit.dev.
 
-import {html, css, LitElement} from 'https://cdn.skypack.dev/lit';
+import {html, css, LitElement} from 'lit';
 
 export class UiButton extends LitElement {
   static get name() {
