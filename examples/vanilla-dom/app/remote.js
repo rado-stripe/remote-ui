@@ -50,8 +50,6 @@ endpoint.expose({
       ),
     );
 
-    textFieldComponent.props.onKeyUp();
-
     root.appendChild(
       root.createComponent(
         'Button',
