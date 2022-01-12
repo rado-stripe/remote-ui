@@ -4,6 +4,7 @@ import {
   fromInsideIframe,
 } from '@remote-ui/rpc';
 import {createRemoteRoot} from '@remote-ui/core';
+import { reportError } from 'schema-utils/node_modules/ajv/dist/compile/errors';
 
 // This creates the “remote” endpoint — the one that executes inside
 // a hidden iframe, and has no access to the DOM of the main page.
@@ -36,6 +37,41 @@ endpoint.expose({
 
     root.appendChild(
       root.createComponent(
+        'TextField',
+        {
+          async onTextChange(value) {
+            // We use our `api` object to get some information from the main
+            // page, which in this case will be the content of a text field only
+            // the main page has access to.
+            const message = await api.getMessage();
+            console.log(`Message from the host: ${JSON.stringify(message)}`);
+
+
+            root.appendChild(
+              root.createComponent(
+                'Button',
+                {
+                  async onPress() {
+                    // We use our `api` object to get some information from the main
+                    // page, which in this case will be the content of a text field only
+                    // the main page has access to.
+                    const message = await api.getMessage();
+                    console.log(`Newly created button Message from the host: ${JSON.stringify(message)}`);
+                  },
+                },
+                'Newly created element',
+              ),
+            );
+
+
+          },
+        },
+        'Log message in remote environment',
+      ),
+    );
+
+    root.appendChild(
+      root.createComponent(
         'Button',
         {
           async onPress() {
@@ -44,6 +80,25 @@ endpoint.expose({
             // the main page has access to.
             const message = await api.getMessage();
             console.log(`Message from the host: ${JSON.stringify(message)}`);
+
+
+            root.appendChild(
+              root.createComponent(
+                'Button',
+                {
+                  async onPress() {
+                    // We use our `api` object to get some information from the main
+                    // page, which in this case will be the content of a text field only
+                    // the main page has access to.
+                    const message = await api.getMessage();
+                    console.log(`Newly created button Message from the host: ${JSON.stringify(message)}`);
+                  },
+                },
+                'Newly created element',
+              ),
+            );
+
+
           },
         },
         'Log message in remote environment',
