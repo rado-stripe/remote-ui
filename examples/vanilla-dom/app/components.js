@@ -88,6 +88,7 @@ export class UiTextField extends LitElement {
 
   static get properties() {
     return {
+      onTextChange: {type: Function},
       label: {type: String},
     };
   }
@@ -158,12 +159,17 @@ export class UiTextField extends LitElement {
       <div class="TextField">
         <label class="Label" for=${this.id}>${this.label}</label>
         <div class="InputContainer">
-          <input id=${this.id} class="Input" type="text"></input>
+          <input id=${this.id} class="Input" type="text" @keyup=${e => this.onKeyUp(e.target.value)}></input>
           <div class="InputBackdrop"></div>
         </div>
       </div>
     `;
   }
+
+  // onKeyUp(e ) {
+  //   console.log("GOt here");
+  //   // this.onKeyUp && this.onKeyUp();
+  // }
 }
 
 // @see https://github.com/ai/nanoid/blob/main/non-secure/index.js

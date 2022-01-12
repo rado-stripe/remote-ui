@@ -10,13 +10,11 @@ import {UiButton, UiTextField} from './components.js';
 // application — `UiButton` will be available for the remote context to
 // render, and `UiTextField` is used on the main page to render an input
 // that is not managed by the remote context.
-console.log("UIButton:" + UiButton.name)
-console.log("UiTextField:" + UiTextField.name)
 customElements.define(UiButton.name, UiButton);
 customElements.define(UiTextField.name, UiTextField);
 
 const uiRoot = document.querySelector('#root');
-const textField = document.querySelector(UiTextField.name);
+const textField = document.getElementById("hard-coded-text-field");
 const remoteIframe = document.querySelector('iframe');
 
 // This creates an object that represents the remote context — in this case,
@@ -48,4 +46,7 @@ receiver.bind(uiRoot);
 // `postMessage()` to the remote context.
 remoteEndpoint.call.render(receiver.receive, {
   getMessage: () => textField.value,
+  getMesssageById: (id) => {
+    document.getElementById(id).value
+  }
 });

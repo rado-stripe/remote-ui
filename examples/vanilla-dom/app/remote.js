@@ -35,40 +35,22 @@ endpoint.expose({
 
     const root = createRemoteRoot(receiver);
 
+    let textFieldComponent = null;
+
     root.appendChild(
-      root.createComponent(
+      textFieldComponent = root.createComponent(
         'TextField',
         {
-          async onTextChange(value) {
-            // We use our `api` object to get some information from the main
-            // page, which in this case will be the content of a text field only
-            // the main page has access to.
-            const message = await api.getMessage();
-            console.log(`Message from the host: ${JSON.stringify(message)}`);
 
-
-            root.appendChild(
-              root.createComponent(
-                'Button',
-                {
-                  async onPress() {
-                    // We use our `api` object to get some information from the main
-                    // page, which in this case will be the content of a text field only
-                    // the main page has access to.
-                    const message = await api.getMessage();
-                    console.log(`Newly created button Message from the host: ${JSON.stringify(message)}`);
-                  },
-                },
-                'Newly created element',
-              ),
-            );
-
-
-          },
+          async onKeyUp(value) {
+            console.log(`Text changed ${value}`);
+          }
         },
-        'Log message in remote environment',
+        'Text change watcher'
       ),
     );
+
+    textFieldComponent.props.onKeyUp();
 
     root.appendChild(
       root.createComponent(
