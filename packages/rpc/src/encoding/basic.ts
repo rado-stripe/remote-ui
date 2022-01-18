@@ -12,7 +12,13 @@ type AnyFunction = (...args: any[]) => any;
 
 const FUNCTION = '_@f';
 
-export function createBasicEncoder(api: EncodingStrategyApi): EncodingStrategy {
+export function createBasicEncoder(
+  useKotlin: boolean,
+  api: EncodingStrategyApi,
+): EncodingStrategy {
+  if (useKotlin) {
+    console.log('use kotlin.');
+  }
   const functionsToId = new Map<AnyFunction, string>();
   const idsToFunction = new Map<string, AnyFunction>();
   const idsToProxy = new Map<string, AnyFunction>();

@@ -1,6 +1,8 @@
 export {createEndpoint} from './endpoint';
+export {createKotlinEndpoint} from './kotlinendpoint';
 export type {Endpoint, CreateEndpointOptions} from './endpoint';
 export {createBasicEncoder} from './encoding';
+export {createKotlinEncoder} from './encoding';
 export {
   fromMessagePort,
   fromWebWorker,

@@ -64,6 +64,7 @@ export interface Endpoint<T> {
  * @see https://tools.ietf.org/html/rfc7049
  */
 export function createEndpoint<T>(
+  useKotlin: boolean,
   initialMessenger: MessageEndpoint,
   {
     uuid = defaultUuid,
@@ -84,7 +85,7 @@ export function createEndpoint<T>(
 
   const call = createCallable<T>(handlerForCall, callable);
 
-  const encoder = createEncoder({
+  const encoder = createEncoder(useKotlin, {
     uuid,
     release(id) {
       send(RELEASE, [id]);

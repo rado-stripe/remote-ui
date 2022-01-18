@@ -8,7 +8,7 @@ import { reportError } from 'schema-utils/node_modules/ajv/dist/compile/errors';
 
 // This creates the “remote” endpoint — the one that executes inside
 // a hidden iframe, and has no access to the DOM of the main page.
-const endpoint = createEndpoint(fromInsideIframe());
+const endpoint = createEndpoint(false, fromInsideIframe());
 
 // We use `expose()` to provide methods that the other “side” of the
 // communication channel can call. Here, we are exposing a single method:
@@ -35,53 +35,66 @@ endpoint.expose({
 
     const root = createRemoteRoot(receiver);
 
-    let textFieldComponent = null;
+    let userEnteredName = "";
+    let userEnteredEmail = "";
 
-    root.appendChild(
-      textFieldComponent = root.createComponent(
-        'TextField',
-        {
-
-          async onKeyUp(value) {
-            console.log(`Text changed ${value}`);
-          }
+    let nameComponent = root.createComponent(
+      'TextField',
+      {
+        async onTextChange(value) {
+          console.log(`Text changed ${value}`);
+          userEnteredName = value;
+          nameComponent.updateProps({
+            onTextChange: this,
+            label: 'Name',
+            myValue: value
+          });
         },
-        'Text change watcher'
-      ),
+        label: 'Name',
+        myValue: ''
+      }
     );
+
+    let emailComponent = root.createComponent(
+      'TextField',
+      {
+        async onTextChange(value) {
+          console.log(`Text changed ${value}`);
+          userEnteredEmail = value;
+          emailComponent.updateProps({
+            onTextChange: this,
+            label: 'Email',
+            myValue: value
+          });
+        },
+        label: 'Email',
+        myValue: ''
+      }
+    );
+
+    // Need to be able to set the value here.
+    root.appendChild( nameComponent);
+    root.appendChild( emailComponent);
 
     root.appendChild(
       root.createComponent(
         'Button',
         {
           async onPress() {
-            // We use our `api` object to get some information from the main
-            // page, which in this case will be the content of a text field only
-            // the main page has access to.
-            const message = await api.getMessage();
-            console.log(`Message from the host: ${JSON.stringify(message)}`);
+
+            console.log("remote: onPress function");
+            // Here is where I construct the payment method create parameters.
 
 
-            root.appendChild(
-              root.createComponent(
-                'Button',
-                {
-                  async onPress() {
-                    // We use our `api` object to get some information from the main
-                    // page, which in this case will be the content of a text field only
-                    // the main page has access to.
-                    const message = await api.getMessage();
-                    console.log(`Newly created button Message from the host: ${JSON.stringify(message)}`);
-                  },
-                },
-                'Newly created element',
-              ),
-            );
-
+            // // We use our `api` object to get some information from the main
+            // // page, which in this case will be the content of a text field only
+            // // the main page has access to.
+            // const message = await api.getMessage();
+            // console.log(`Message from the host: ${JSON.stringify(message)}`);
 
           },
         },
-        'Log message in remote environment',
+        'Buy',
       ),
     );
 

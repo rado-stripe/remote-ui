@@ -4,6 +4,8 @@
 
 import {html, css, LitElement} from 'lit';
 
+let isAndroid = true;
+
 export class UiButton extends LitElement {
   static get name() {
     return 'ui-button';
@@ -88,11 +90,13 @@ export class UiTextField extends LitElement {
 
   static get properties() {
     return {
-      onTextChange: {type: Function},
+      onTextChange: {type: Function}, // How do you say this can't be null?
       label: {type: String},
+      myValue: {type: String}
     };
   }
 
+  
   static get styles() {
     return css`
       * {
@@ -159,17 +163,17 @@ export class UiTextField extends LitElement {
       <div class="TextField">
         <label class="Label" for=${this.id}>${this.label}</label>
         <div class="InputContainer">
-          <input id=${this.id} class="Input" type="text" @keyup=${e => this.onKeyUp(e.target.value)}></input>
+          <input id=${this.id} class="Input" value="${this.myValue}" type="text" @keyup=${e => this.onKeyUp(e.target.value)}></input>
           <div class="InputBackdrop"></div>
         </div>
       </div>
     `;
   }
 
-  // onKeyUp(e ) {
-  //   console.log("GOt here");
-  //   // this.onKeyUp && this.onKeyUp();
-  // }
+  onKeyUp(value) {
+    console.log("GOt here");
+    this.onTextChange && this.onTextChange(value);
+  }
 }
 
 // @see https://github.com/ai/nanoid/blob/main/non-secure/index.js

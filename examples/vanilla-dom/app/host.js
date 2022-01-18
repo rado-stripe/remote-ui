@@ -1,4 +1,4 @@
-import {DomReceiver} from '@remote-ui/dom';
+import {DomReceiver, withEventListeners } from '@remote-ui/dom';
 import {
   createEndpoint,
   fromIframe,
@@ -16,12 +16,32 @@ customElements.define(UiTextField.name, UiTextField);
 const uiRoot = document.querySelector('#root');
 const textField = document.getElementById("hard-coded-text-field");
 const remoteIframe = document.querySelector('iframe');
+const {value, onChange, onPress} = getPropsForValue();
+
+function getPropsForValue(value = '') {
+  return {
+    value,
+    onChange: () => {
+      const {value, onChange, onPress} = getPropsForValue();
+      textField.updateProps({value, onChange});
+      button.updateProps({onPress});
+    },
+    onPress: () => console.log(value),
+  };
+}
 
 // This creates an object that represents the remote context — in this case,
 // some JavaScript executing inside an `iframe`. We can use this object
 // to interact with the `iframe` code without having to worry about using
 // `postMessage()`.
-const remoteEndpoint = createEndpoint(fromIframe(remoteIframe));
+
+window.parentIFrame = fromIframe(remoteIframe);
+const remoteEndpoint = createEndpoint(
+  true,
+  window.parentIFrame
+);
+
+window.remoteEndpoint = remoteEndpoint;
 
 // This object will receive messages about UI updates from the remote context
 // and turn them into a matching tree of DOM nodes. We provide a mapping of
@@ -38,6 +58,7 @@ const receiver = new DomReceiver({
 // This instructs the receiver to render any UI for the remote context
 // in our (initially empty) wrapper element.
 receiver.bind(uiRoot);
+window.receiver = receiver;
 
 // Here, we are using the `Endpoint` API to call a method that was “exposed”
 // in the remote context. As you’ll see in `./remote.js`, that JavaScript
@@ -48,5 +69,9 @@ remoteEndpoint.call.render(receiver.receive, {
   getMessage: () => textField.value,
   getMesssageById: (id) => {
     document.getElementById(id).value
-  }
+  },
+  setTextFieldById: (id, value) => {
+    console.log(`XXX id: ${id} ${typeof document.getElementById(id)}` )
+    document.getElementById(id).value = value
+  },
 });
